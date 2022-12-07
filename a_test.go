@@ -13,7 +13,7 @@ type NoPad struct {
 }
 
 func (myatomic *NoPad) IncreaseAll() {
-	atomic.AddUint64(&myatomic.a[1], 1)
+	atomic.AddUint64(&myatomic.a[0], 1)
 	atomic.AddUint64(&myatomic.b[0], 1)
 	atomic.AddUint64(&myatomic.c[0], 1)
 }
@@ -25,7 +25,7 @@ type Pad struct {
 }
 
 func (myatomic *Pad) IncreaseAll() {
-	atomic.AddUint64(&myatomic.a[1], 1)
+	atomic.AddUint64(&myatomic.a[0], 1)
 	atomic.AddUint64(&myatomic.b[0], 1)
 	atomic.AddUint64(&myatomic.c[0], 1)
 }
