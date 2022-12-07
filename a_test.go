@@ -7,30 +7,27 @@ import (
 )
 
 type NoPad struct {
-	a uint64
-	b uint64
-	c uint64
+	a [2]uint64
+	b [2]uint64
+	c [2]uint64
 }
 
 func (myatomic *NoPad) IncreaseAll() {
-	atomic.AddUint64(&myatomic.a, 1)
-	atomic.AddUint64(&myatomic.b, 1)
-	atomic.AddUint64(&myatomic.c, 1)
+	atomic.AddUint64(&myatomic.a[1], 1)
+	atomic.AddUint64(&myatomic.b[0], 1)
+	atomic.AddUint64(&myatomic.c[0], 1)
 }
 
 type Pad struct {
-	a uint64
-	_ [7]uint64
-	b uint64
-	_ [7]uint64
-	c uint64
-	_ [7]uint64
+	a [8]uint64
+	b [8]uint64
+	c [8]uint64
 }
 
 func (myatomic *Pad) IncreaseAll() {
-	atomic.AddUint64(&myatomic.a, 1)
-	atomic.AddUint64(&myatomic.b, 1)
-	atomic.AddUint64(&myatomic.c, 1)
+	atomic.AddUint64(&myatomic.a[1], 1)
+	atomic.AddUint64(&myatomic.b[0], 1)
+	atomic.AddUint64(&myatomic.c[0], 1)
 }
 
 type MyAtomic interface {
@@ -50,17 +47,20 @@ func testAtomicIncrease(myatomic MyAtomic, n int) {
 		}()
 	}
 	wg.Wait()
-
 }
 
 func BenchmarkNoPad(b *testing.B) {
 	myatomic := &NoPad{}
+	myatomic.a = [2]uint64{0, 1}
 	b.ResetTimer()
 	testAtomicIncrease(myatomic, b.N)
 }
 
 func BenchmarkPad(b *testing.B) {
 	myatomic := &Pad{}
+	myatomic.a = [8]uint64{0}
+	myatomic.b = [8]uint64{0}
+	myatomic.c = [8]uint64{0}
 	b.ResetTimer()
 	testAtomicIncrease(myatomic, b.N)
 }
